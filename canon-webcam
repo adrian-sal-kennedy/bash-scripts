@@ -1,0 +1,15 @@
+#!/bin/bash
+echo pkill -f gphoto2
+pkill -f gphoto2
+echo sudo modprobe -r uvcvideo
+sudo modprobe -r uvcvideo
+echo sudo modprobe -r v4l2loopback
+sudo modprobe -r v4l2loopback
+echo sudo modprobe v4l2loopback video_nr=0 card_label="canon" exclusive_caps=1
+sudo modprobe v4l2loopback video_nr=0 card_label="canon" exclusive_caps=1
+echo gphoto2 --capture-preview --stdout \| ffmpeg -i - -c: rawvideo -vf format=yuv420p -threads 0 -f v4l2 /dev/video0
+gphoto2 --capture-movie --stdout | ffmpeg -i - -c: rawvideo -vf 'format=yuv420p,colorspace=iall=bt709:irange=pc:all=bt709:range=tv' -threads 0 -f v4l2 /dev/video0
+echo sudo modprobe -r v4l2loopback
+sudo modprobe -r v4l2loopback
+echo sudo modprobe uvcvideo
+sudo modprobe uvcvideo

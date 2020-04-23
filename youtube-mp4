@@ -1,0 +1,2 @@
+#!/bin/bash
+/usr/local/bin/youtube-dl --format=mp4 "$1"

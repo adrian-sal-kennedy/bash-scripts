@@ -1,0 +1,1 @@
+/home/sal/scripts/cordlessmouse.sh

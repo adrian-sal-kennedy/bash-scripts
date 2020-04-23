@@ -1,0 +1,25 @@
+#!/bin/bash
+echo "${@##*.}"
+case "${@##*.}" in
+rb)
+    echo '#!/usr/bin/env ruby' > $@ && chmod +x $@
+    echo created empty executable ruby file\(s\)\: $@
+    ;;
+sh)
+    echo '#!/bin/bash' > $@ && chmod +x $@
+    echo created empty executable bash file\(s\)\: $@
+    ;;
+py)
+    echo '#!/usr/bin/env python' > $@ && chmod +x $@
+    echo created empty executable python file\(s\)\: $@
+    ;;
+$@)
+    # this is odd - ${@##*.} will return $@ if it would have been empty, so we test for $@ instead of ""
+    echo '#!/bin/bash' > $@ && chmod +x $@
+    echo created empty executable bash file\(s\)\: $@
+    ;;
+*)
+    touch $@ && chmod +x $@
+    echo created empty executable text file\(s\)\: $@
+esac
+

@@ -1,0 +1,5 @@
+#!/bin/bash
+
+#xsetwacom --set "WALTOP International Corp. Slim Tablet stylus" MapToOutput 1218x861+1993+173
+xsetwacom --set "WALTOP International Corp. Slim Tablet stylus" MapToOutput 1920x1080+1920+0
+#xsetwacom --set "WALTOP International Corp. Slim Tablet stylus" MapToOutput 1920x1080+0+0

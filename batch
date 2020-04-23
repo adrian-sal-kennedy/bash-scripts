@@ -1,0 +1,19 @@
+#!/bin/bash
+
+echo >$PWD/fails.log
+IFS='
+'
+
+find $PWD -name "$1" -exec echo \"{}\" \; 2>/dev/null | sort > list.tmp
+cat list.tmp | while read -r file
+	do echo
+	echo attempting "$2" "$file"
+	echo
+	#sleep 5
+	eval "$2" \"${file}\" || echo "${file}" >> $PWD/fails.log
+done
+
+#find $PWD -name "$1" -exec echo "$2" {} \; -exec "$2" {} \;
+
+#find /media/sal/LISTIES\ SSD/THE\ LISTIES\ LOL/GRADE\ mediamanage\ clips/ -iname "*.vpy" | while read file; do echo "$(basename "$file")" | while read filet; do if [ ! -f "/media/sal/4tb2/THE LISTIES LOL/filtered-conform-clips/${filet%.*}.mezzanine.mov" ]; then encode-prores-ebur128.sh "$file" ; fi ; done ; done
+

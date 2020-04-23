@@ -1,0 +1,8 @@
+#!/bin/bash
+if [ ! -z "$2" ]
+then
+	ffmpeg -i "$1" -c: copy -c:v libx265 -tune ssim -preset veryfast -crf 20 -vf format=yuv420p,mpdecimate -vsync vfr "${2%.*}.mkv"
+else
+	ffmpeg -i "$1" -c: copy -c:v libx265 -tune ssim -preset veryfast -crf 20 -vf format=yuv420p,mpdecimate -vsync vfr "${1%.*}-obs-encode.mkv"
+fi
+

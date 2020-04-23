@@ -1,0 +1,10 @@
+#!/bin/bash
+echo sudo modprobe -r v4l2loopback
+sudo modprobe -r v4l2loopback
+echo sudo modprobe v4l2loopback video_nr=1 card_label="obs-studio" exclusive_caps=1
+sudo modprobe v4l2loopback devices=1 video_nr=1 card_label="obs-studio" exclusive_caps=1
+#echo sudo modprobe -r uvcvideo
+#sudo modprobe -r uvcvideo
+#echo sudo modprobe uvcvideo video_nr=0 exclusive_caps=1
+#sudo modprobe uvcvideo video_nr=0 exclusive_caps=1
+obs

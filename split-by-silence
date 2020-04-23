@@ -1,0 +1,6 @@
+#!/bin/bash
+file=$1
+db=-124
+[ $2 ] && db=$2
+echo ${db}dB
+ffmpeg -nostdin -nostats -hide_banner -i "$file" -af "aformat=sample_fmts=flt,silencedetect=n=${db}dB:d=0.5" -f null - 2>&1 | awk -v file="${file%.*}" -v ext="${file##*.}" 'BEGIN{count=0} /silence_end/ {ff_ss=silence_end0; ff_t=($5-$8)-ff_ss; printf("ffmpeg -nostdin -ss %f -t %f -i \"%s.%s\" -c: flac \"%s_%03d.%s\"\n",ff_ss,ff_t,file,ext,file,count,ext);silence_end0=$5;count+=1}' | bash -x 
