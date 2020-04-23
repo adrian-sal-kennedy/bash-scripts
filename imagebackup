@@ -1,1 +1,51 @@
-/home/sal/scripts/imagebackup_ext.sh
+#!/bin/bash
+
+source="$PWD"
+machine=$(echo $SESSION_MANAGER | cut -d : -f 1)
+#target="/media/sal/mad03_portable/Raw"
+target=$1
+
+ffmpegdir="/usr/local/bin"
+#ffmpegdir="/usr/bin"
+
+#find "$source" -type f -iname "*.mov" -or -iname "*.mp4" -or -iname "*.3gp" -or -iname "*.mxf" -or -iname "*.tif" -or -iname "*.jpg" -or -iname "*.pef" -or -
+find "$source" -type f -iname "*.mov" -or -iname "*.mp4" -or -iname "*.3gp" -or -iname "*.mxf" -or -iname "*.tif" -or -iname "*.jpg" -or -iname "*.pef" -or -iname "*.crw" -or -iname "*.cr2" -or -iname "*.arw" -or -iname "*.dng" -or -iname "*.mlv" -or -iname "*.raw" | while read file ; do
+   echo "$file"
+
+   if [ ${file: -4} == ".MOV" ] || [ ${file: -4} == ".MP4" ]
+   then
+   #date=$("ffmpeg" -i "$file" 2>&1 | awk '/creation_time/ && !done { print $3;done=1 }' | sed -n "s/-/:/gp")
+   date=$("ffmpeg" -i "$file" 2>&1 | awk '/creation_time/ && !done { print $3;done=1 }' | sed -n "s/[-T]/:/gp") # modified for recent ffmpeg date format
+   date=${date:0:10}
+   else
+   date=$(exiv2 "$file" 2> /dev/null | awk '/Image timestamp/ { print $4 }')
+      [ -z "$date" ] && date=$(stat -c %y "$file" | awk '{print $1}' | sed -n "s/-/:/gp")
+   fi
+   
+   [ -z "$date" ] && echo "$file" >> ~/error.txt && continue
+#   year=${date%%:*}
+#   month=${date%:*}
+#   month=${month#*:}
+#   day=${date##*:}
+    year=${date:0:4}
+    month=${date:5:2}
+    day=${date:8:2}
+   
+   if [ ! -f "${target}/${year}-${month}-${day}/$(basename "$file")" ]
+      then
+         echo cp "$file" "${target}/${year}-${month}-${day}"
+         mkdir -p "${target}/${year}-${month}-${day}"
+         cp "$file" "${target}/${year}-${month}-${day}"
+         #[ -z "$file.xmp" ] && cp "$file.xmp" "${target}/${year}-${month}-${day}"
+         cp "$file.xmp" "${target}/${year}-${month}-${day}"
+         if [ ${file: -4} == ".MP4" ]
+           then
+           cp "${file%.*}M01.XML" "${target}/${year}-${month}-${day}"
+         fi
+         #chmod 666 "${target}/${year}-${month}-${day}/`basename "$file"`"
+         #chmod 666 "${target}/${year}-${month}-${day}/`basename "$file"`.xmp"
+      else
+         eval echo "$(basename $file) already exists..."
+   fi
+
+done
